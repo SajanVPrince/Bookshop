@@ -22,8 +22,8 @@ urlpatterns = [
     path('fantacybk',views.fantacy),
     path('scifibk',views.scifi),
     path('otherbk',views.others),
-    path('usedbk',views.usedbk),
     path('viewprod/<id>',views.view_prod),
+    path('viewsprod/<id>',views.view_sprod),
     path('userpro',views.userpro ,name='userpro'),
     path('viewcart',views.viewcart),
     path('add_to_cart/<pid>',views.add_to_cart),
@@ -37,6 +37,9 @@ urlpatterns = [
     path('checkout', views.buy_cart, name='buy_cart'),
     path('cancel_oder/<id>',views.cancel_order),
     path('view_details/<id>',views.view_booking_details),
+    path('ordersucces',views.order_success , name='order_success'),
+
+    
 
 
 

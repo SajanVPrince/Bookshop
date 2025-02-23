@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(to right, #00b4d8, #0096c7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        a.btn {
+            display: inline-block;
+            padding: 10px 30px;
+            border: 2px solid #00b4d8;
+            background-color: transparent;
+            color: #00b4d8;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        a.btn:hover {
+            background-color: #00b4d8;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Animation for the container */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Confetti animation */
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            animation: confetti 3s ease-in-out infinite;
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(100vh);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Confetti pieces */
+        .confetti div {
+            position: absolute;
+            background-color: #ff9f00;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confettiDrop 3s ease-in-out infinite;
+        }
+
+        .confetti div:nth-child(odd) {
+            background-color: #ff7b00;
+        }
+
+        .confetti div:nth-child(even) {
+            background-color: #e60012;
+        }
+
+        @keyframes confettiDrop {
+            0% {
+                opacity: 1;
+                transform: translateY(-50px);
+            }
+            50% {
+                opacity: 0.6;
+                transform: translateY(150px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti Background Effect -->
+    <div class="confetti">
+        <div style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+        <div style="top: 30%; left: 50%; animation-delay: 0.5s;"></div>
+        <div style="top: 50%; left: 80%; animation-delay: 1s;"></div>
+        <div style="top: 70%; left: 25%; animation-delay: 1.5s;"></div>
+        <div style="top: 10%; left: 40%; animation-delay: 2s;"></div>
+        <!-- Add more confetti pieces as desired -->
+    </div>
+
+    <div class="container">
+        <h1>Order Placed Successfully</h1>
+        <h2>Thank you for shopping with us</h2>
+        <a href="home" class="btn">Go to Home</a>
+    </div>
+</body>
+</html>

@@ -151,12 +151,11 @@ def resetpassword(req):
 def search_view(request):
     query = request.GET.get('q', '') 
     if query:
-        results = Books.objects.filter(name__icontains=query)
-        results1 = Sbook.objects.filter(sname__icontains=query)  # Case-insensitive search
+        results = Books.objects.filter(name__icontains=query) # Case-insensitive search
     else:
         results = [] 
         results1 = []
-    return render(request, 'users/search.html', {'results': results,'results1': results1, 'query': query})
+    return render(request, 'users/search.html', {'results': results, 'query': query})
 
 
 # ---USER------
@@ -172,12 +171,12 @@ def bk_home(req):
         if req.method=='POST':
             user=User.objects.get(username=req.session['user'])
             review=req.POST['review']
-            # data4=Review.objects.create(user=user,review=review)
-            # data4.save()
+            data4=Review.objects.create(user=user,review=review)
+            data4.save()
             messages.success(req,"Thanks for your complements")
     
-    # rev=Apreview.objects.all()[::-1]
-    return render(req,'users/home.html',{'data':data,'data1':data1,'data2':data2,'data3':data3,'data5':data5})
+    rev=Review.objects.all()[::-1]
+    return render(req,'users/home.html',{'data':data,'data1':data1,'data2':data2,'data3':data3,'data5':data5,'data4':rev})
 
 def sell(req):
     if 'user' in req.session:
@@ -222,39 +221,74 @@ def view_prod(req,id):
     data=Books.objects.get(pk=id)
     return render(req,'users/viewprod.html',{'data':data})
 
+def view_sprod(req,id):
+    data=Sbook.objects.get(pk=id)
+    return render(req,'users/viewsprod.html',{'data':data})
+
 def userpro(req):
     if 'user' in req.session:
-        user=User.objects.get(username=req.session['user'])
-        data1=Userdtl.objects.filter(user=user)
-        if req.method == 'POST':
-            user=User.objects.get(username=req.session['user'])
-            name=req.POST['name']
-            phn=req.POST['phn']
-            altphn=req.POST['altphn']
-            pin=req.POST['pin']
-            land=req.POST['land']
-            adrs=req.POST['adrs']
-            city=req.POST['city']
-            state=req.POST['state']
-            data=Userdtl.objects.create(user=user,fullname=name,phone=phn,pincode=pin,landmark=land,adress=adrs,city=city,state=state,altphone=altphn)
-            data.save()
+        user = User.objects.get(username=req.session['user'])
+        data1 = Userdtl.objects.filter(user=user)
+        
+        # Check if address form is being submitted
+        if req.method == 'POST' and 'name' in req.POST:
+            name = req.POST['name']
+            phn = req.POST['phn']
+            altphn = req.POST['altphn']
+            pin = req.POST['pin']
+            land = req.POST['land']
+            adrs = req.POST['adrs']
+            city = req.POST['city']
+            state = req.POST['state']
+            
+            # Check if address already exists before saving
+            existing_address = Userdtl.objects.filter(
+                user=user,
+                fullname=name,
+                phone=phn,
+                altphone=altphn,
+                pincode=pin,
+                landmark=land,
+                adress=adrs,
+                city=city,
+                state=state
+            ).first()
+
+            if not existing_address:
+                # Create a new address if not already existing
+                data = Userdtl.objects.create(
+                    user=user,
+                    fullname=name,
+                    phone=phn,
+                    pincode=pin,
+                    landmark=land,
+                    adress=adrs,
+                    city=city,
+                    state=state,
+                    altphone=altphn
+                )
+                data.save()
             return redirect(userpro)
-        elif req.method=='POST':
-            user=User.objects.get(username=req.session['user'])
-            old_pass=req.POST['oldpass']
-            new_pass=req.POST['newpass']
+        
+        # Check if password change form is being submitted
+        elif req.method == 'POST' and 'oldpass' in req.POST:
+            old_pass = req.POST['oldpass']
+            new_pass = req.POST['newpass']
             if user.check_password(old_pass):
                 user.set_password(new_pass)
                 user.save()
-                messages.success(req,"Password changed successfully")
+                messages.success(req, "Password changed successfully")
                 return redirect(userpro)
             else:
-                messages.warning(req,"Old password is incorrect")
-                return redirect(change_pass)
+                messages.warning(req, "Old password is incorrect")
+                return redirect(userpro)
+        
         else:
-            return render(req,'users/userprofile.html',{'data':user,'data1':data1})
+            return render(req, 'users/userprofile.html', {'data': user, 'data1': data1})
+    
     else:
-        return render(req,'users/userprofile.html',{'data':user})
+        return redirect('bk_login')
+
     
 def change_pass(req):
     if 'user' in req.session:
@@ -284,6 +318,7 @@ def add_to_cart(req,pid):
         return redirect(viewcart)
     else:
         return redirect(bk_login)
+
     
 def viewcart(req):
     if 'user' in req.session:
@@ -330,14 +365,7 @@ def deletefavs(request, pk):
         return redirect(viewfav)
     else:
         return redirect('login')
-    
-def usedbk(req):
-    if 'user1' in req.session:
-        user1 = req.session['user1']
-        data = Sbook.objects.exclude(user_id=user1).order_by('-id')
-    else:
-        data=Sbook.objects.all()[::-1]
-    return render(req,'users/usedbook.html',{'data':data})
+
 
 def view_odrs(req):
     if 'user' in req.session:
@@ -364,12 +392,12 @@ def product_buy(req, id):
                 user_address = Userdtl.objects.get(id=selected_address_id)
             else:
                 fullname = req.POST['fullname']
-                address = req.POST['address']
+                address = req.POST['adress']
                 pincode = req.POST['pincode']
                 city = req.POST['city']
                 state = req.POST['state']
-                phone = req.POST['phnum']
-                altphone = req.POST['aphnum']
+                phone = req.POST['phone']
+                altphone = req.POST['altphone']
                 landmark = req.POST['landmark']
                 user_address = Userdtl.objects.create(
                     user=user,
@@ -384,24 +412,37 @@ def product_buy(req, id):
                 )
                 user_address.save()
 
-            if prod.stock > 0:
-                # purchase = Buys.objects.create(user=user, product=prod, address=user_address)
-                # purchase.save()
-                prod.stock -= 1
-                prod.save()
-                return redirect(order_success)
+            # Store the order data temporarily in the session
+            order_data = {
+                'cart': [{'product': prod.id, 'quantity': 1}],
+                'selected_address': {
+                    'fullname': user_address.fullname,
+                    'address': user_address.adress,
+                    'city': user_address.city,
+                    'state': user_address.state,
+                    'pincode': user_address.pincode,
+                    'phone': user_address.phone,
+                    'altphone': user_address.altphone,
+                    'landmark': user_address.landmark,
+                },
+                'total_price': prod.ofr_price,
+                'total_discount': prod.price - prod.ofr_price
+            }
+            req.session['order_data'] = order_data  # Store in session
+            
+            return redirect('order_success')  # Redirect to success page
 
         return render(req, 'users/buypage.html', {'prod': prod, 'saved_addresses': saved_addresses})
     else:
-        return redirect(bk_login)
-    
+        return redirect('bk_login')
+
 
 def buy_cart(request):
     if 'user' in request.session:
         user = User.objects.get(username=request.session['user'])
         cart = Cart.objects.filter(user=user)
         total_price = sum([item.product.ofr_price for item in cart])
-        total_discount = sum([item.product.price - item.product.ofr_price for item in cart]) 
+        total_discount = sum([item.product.price - item.product.ofr_price for item in cart])
         saved_addresses = Userdtl.objects.filter(user=user)
 
         selected_address = None
@@ -433,20 +474,35 @@ def buy_cart(request):
                     landmark=landmark
                 )
 
-            # Proceed with the purchase
-            if selected_address:
-                # Here you can add the logic to create a purchase record and reduce product stock
-                return redirect('order_success')  # Redirect to a success page
+            # Store cart data and selected address in session for later use
+            order_data = {
+                'cart': list(cart.values()),
+                'selected_address': {
+                    'fullname': selected_address.fullname,
+                    'address': selected_address.adress,
+                    'city': selected_address.city,
+                    'state': selected_address.state,
+                    'pincode': selected_address.pincode,
+                    'phone': selected_address.phone,
+                    'altphone': selected_address.altphone,
+                    'landmark': selected_address.landmark,
+                },
+                'total_price': total_price,
+                'total_discount': total_discount
+            }
+            request.session['order_data'] = order_data  # Store in session
+            
+            return redirect('order_success')  # Redirect to success page
 
         return render(request, 'users/checkout.html', {
             'cart': cart, 
             'total_price': total_price, 
             'total_discount': total_discount,
             'saved_addresses': saved_addresses,
-            'selected_address': selected_address,
         })
     else:
         return redirect('bk_login')
+
     
 def cancel_order(req, id):
     if 'user' in req.session:
@@ -456,10 +512,78 @@ def cancel_order(req, id):
     else:
         return redirect(bk_login)
     
-def view_booking_details(req,id):
+def view_booking_details(req, id):
     if 'user' in req.session:
         user = User.objects.get(username=req.session['user'])
-        bookings =  Buys.objects.filter(user=user)
-        return render(req, 'users/viewbookingdetails.html', {'bookings': bookings})
+        try:
+            booking = Buys.objects.get(user=user, pk=id)  # Fetch a specific booking by ID
+        except Buys.DoesNotExist:
+            return redirect('some_error_page')  # Handle case where the booking is not found
+        
+        return render(req, 'users/viewbookingdetails.html', {'booking': booking})
     else:
-        return redirect(bk_login)
+        return redirect('bk_login')
+
+
+def order_success(req):
+    if 'order_data' in req.session:
+        order_data = req.session['order_data']
+        
+        # Retrieve the user and address information
+        user = User.objects.get(username=req.session['user'])
+        selected_address_data = order_data['selected_address']
+        
+        # Check if the address already exists in the database
+        existing_address = Userdtl.objects.filter(
+            user=user,
+            fullname=selected_address_data['fullname'],
+            adress=selected_address_data['address'],
+            city=selected_address_data['city'],
+            state=selected_address_data['state'],
+            pincode=selected_address_data['pincode'],
+            phone=selected_address_data['phone'],
+            altphone=selected_address_data['altphone'],
+            landmark=selected_address_data['landmark']
+        ).first()
+
+        if not existing_address:
+            # Save the new address if it does not exist
+            selected_address = Userdtl.objects.create(
+                user=user,
+                fullname=selected_address_data['fullname'],
+                adress=selected_address_data['address'],
+                city=selected_address_data['city'],
+                state=selected_address_data['state'],
+                pincode=selected_address_data['pincode'],
+                phone=selected_address_data['phone'],
+                altphone=selected_address_data['altphone'],
+                landmark=selected_address_data['landmark'],
+            )
+        else:
+            # If the address already exists, use the existing one
+            selected_address = existing_address
+
+        # Process cart items and reduce stock
+        for item in order_data['cart']:
+            product = Books.objects.get(id=item['product'])
+            Buys.objects.create(
+                user=user,
+                product=product,
+                address=selected_address,
+                # quantity=item['quantity'],
+                # total_price=product.ofr_price * item['quantity']
+            )
+            # Reduce stock
+            product.stock -= item['quantity']
+            product.save()
+
+        # Clear the cart
+        Cart.objects.filter(user=user).delete()
+
+        # Clear session data after completing the order
+        del req.session['order_data']
+        
+        return render(req, 'users/ordersuccess.html')
+    else:
+        return redirect('home')
+

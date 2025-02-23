@@ -12,14 +12,6 @@ class Books(models.Model):
     img=models.FileField()
     dis=models.TextField()
 
-class Sbook(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
-    sname=models.TextField()
-    sath_name=models.TextField()
-    sbk_genres=models.TextField()
-    sprice=models.IntegerField()
-    simg=models.FileField()
-    sdis=models.TextField()
 
 class Userdtl(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -36,12 +28,18 @@ class Cart(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     product=models.ForeignKey(Books,on_delete=models.CASCADE)
 
+
 class Favorite(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     product=models.ForeignKey(Books,on_delete=models.CASCADE)
+
 
 class Buys(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     product=models.ForeignKey(Books,on_delete=models.CASCADE)
     address=models.ForeignKey(Userdtl,on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+
+class Review(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    review=models.TextField()

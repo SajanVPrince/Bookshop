@@ -69,9 +69,9 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item" id="dropdown">
+                <!-- <li class="nav-item" id="dropdown">
                     <a href="sell" class="nav-link active">Sell Your Book</a>
-                </li> 
+                </li>  -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Books</a>
                     <ul class="dropdown-menu">
@@ -82,9 +82,9 @@
                         <li><a class="dropdown-item" href="otherbk">Others</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="usedbk" class="nav-link">Used Books</a>
-                </li>  
+                </li>   -->
                 <li class="nav-item">
                     <a href="viewoders" class="nav-link">My Orders</a>
                 </li>
@@ -132,18 +132,19 @@
             No products found in New Books "<strong>{{ query }}</strong>".
         </div>
     {% endif %}
-    <h2>Used Books</h2>
+</div>
+    <!-- <h2>Used Books</h2>
     {% if results1 %}
         <div class="row">
             {% for product in results1 %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <div class="card shadow-sm border-light rounded">
-                        <img class="card-img-top" src="{{ product.img.url }}" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                        <img class="card-img-top" src="{{ product.simg.url }}" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
                         <div class="card-body">
-                            <h5 class="card-title text-truncate" style="max-width: 200px;">{{ product.name }}</h5>
-                            <p class="card-text">{{ product.dis|truncatewords:15 }}</p>
-                            <p class="card-text"><strong>₹{{ product.price }}</strong></p>
-                            <a href="viewprod/{{ product.pk }}" class="btn btn-primary btn-block">View Details</a>
+                            <h5 class="card-title text-truncate" style="max-width: 200px;">{{ product.sname }}</h5>
+                            <p class="card-text">{{ product.sdis|truncatewords:15 }}</p>
+                            <p class="card-text"><strong>₹{{ product.sprice }}</strong></p>
+                            <a href="viewsprod/{{ product.pk }}" class="btn btn-primary btn-block">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -154,7 +155,7 @@
             No products found in Used Books "<strong>{{ query }}</strong>".
         </div>
     {% endif %}
-</div>
+</div> -->
 
 
     <!-- Footer -->
@@ -180,7 +181,7 @@
                     <h4>Navigate</h4>
                     <ul>
                         <li><a href="home">Home</a></li>
-                        <li><a href="usedbk">Second Hand Books</a></li>
+                        <!-- <li><a href="usedbk">Second Hand Books</a></li> -->
                         <li><a href="viewcart">Cart</a></li>
                         <li><a href="viewfav">Favorites</a></li>
                     </ul>
