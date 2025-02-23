@@ -157,6 +157,29 @@ def search_view(request):
         results1 = []
     return render(request, 'users/search.html', {'results': results, 'query': query})
 
+# -----ADMIN----
+
+def adminpro(req):
+    return render(req,'admin/adminprofile.html')
+
+def adhome(req):
+    if req.method=='POST':
+        name=req.POST['name']
+        ath_name=req.POST['ath_name']
+        price=req.POST['price']
+        ofr_price=req.POST['ofr_price']
+        bk_genres=req.POST['bk_genres']
+        img=req.FILES['img']
+        dis=req.POST['dis']
+        stock=req.POST['stock']
+        data=Books.objects.create(name=name,ath_name=ath_name,price=price,ofr_price=ofr_price,bk_genres=bk_genres,img=img,dis=dis,stock=stock)
+        data.save()
+        return redirect(adhome)
+    else:
+        return render(req,'admin/admin.html')
+    
+
+
 
 # ---USER------
 
@@ -178,25 +201,6 @@ def bk_home(req):
     rev=Review.objects.all()[::-1]
     return render(req,'users/home.html',{'data':data,'data1':data1,'data2':data2,'data3':data3,'data5':data5,'data4':rev})
 
-def sell(req):
-    if 'user' in req.session:
-        data=Sbook.objects.all()[::-1]
-        if req.method=='POST':
-            user=User.objects.get(username=req.session['user'])
-            bk_name=req.POST['bk_name']
-            ath_name=req.POST['ath_name']
-            bk_price=req.POST['bk_price']
-            bk_genres=req.POST['bk_genres']
-            img=req.FILES['img']
-            bk_dis=req.POST['bk_dis']
-            data=Sbook.objects.create(user=user,sname=bk_name,sath_name=ath_name,sprice=bk_price,sbk_genres=bk_genres,simg=img,sdis=bk_dis)
-            data.save()
-            return redirect(sell)
-        else:
-            return render(req,'users/sell.html',{'data':data})
-    else:
-        return redirect(bk_login)
-    
 def drama(req):
     data=Books.objects.filter(bk_genres='drama')[::-1]
     return render(req,'users/books/drama.html',{'data':data})
@@ -587,3 +591,16 @@ def order_success(req):
     else:
         return redirect('home')
 
+# ------------------------Footer------------------------------
+
+def about(req):
+    return render(req,'footer/about.html')
+
+def faq(req):
+    return render(req,'footer/faq.html')
+
+def services(req):
+    return render(req,'footer/our_services.html')
+
+def privacy(req):
+    return render(req,'footer/privacy.html')

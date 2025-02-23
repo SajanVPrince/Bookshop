@@ -13,10 +13,14 @@ urlpatterns = [
     path('resend_otp_reg',views.resend_otp_reg, name='resend_otp_reg'),
     
 
+    # ----Admin---
+
+    path('adminpro',views.adminpro),
+    path('adhome',views.adhome),
+
     # ---USER----
     path('',views.bk_home),
     path('home',views.bk_home),
-    path('sell',views.sell),
     path('dramabk',views.drama),
     path('lovebk',views.love),
     path('fantacybk',views.fantacy),
@@ -40,7 +44,12 @@ urlpatterns = [
     path('ordersucces',views.order_success , name='order_success'),
 
     
+# ----------------Footer------------------
 
+    path('about',views.about),
+    path('faq',views.faq),
+    path('service',views.services),
+    path('privacy',views.privacy),
 
 
 

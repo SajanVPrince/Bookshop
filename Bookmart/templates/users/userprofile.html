@@ -230,14 +230,14 @@
                 <h4>Add Address</h4>
                 <form action="" method="post">
                     {% csrf_token %}
-                    <input type="text" placeholder="Full Name" name="name" value="" class="form-control"> <br>
-                    <input type="number" placeholder="Phone No." name="phn" value="" class="form-control"><br>
-                    <input type="number" placeholder="Alternate Phone No." name="altphn" value="" class="form-control"><br>
-                    <input type="number" placeholder="Pincode" name="pin" value="" class="form-control"><br>
-                    <input type="text" name="land" placeholder="Landmark" class="form-control"><br>
-                    <input type="text" name="adrs" placeholder="Address" class="form-control"><br>
-                    <input type="text" name="city" placeholder="City/District/Town" class="form-control"><br>
-                    <input type="text" name="state" placeholder="State" class="form-control"><br>
+                    <input type="text" placeholder="Full Name" name="name" value="" class="form-control" required> <br>
+                    <input type="number" placeholder="Phone No." name="phn" value="" class="form-control" required><br>
+                    <input type="number" placeholder="Alternate Phone No." name="altphn" value="" class="form-control" required><br>
+                    <input type="number" placeholder="Pincode" name="pin" value="" class="form-control" required><br>
+                    <input type="text" name="land" placeholder="Landmark" class="form-control" required><br>
+                    <input type="text" name="adrs" placeholder="Address" class="form-control" required><br>
+                    <input type="text" name="city" placeholder="City/District/Town" class="form-control" required><br>
+                    <input type="text" name="state" placeholder="State" class="form-control" required><br>
                     <button type="submit" class="btn btn-outline-primary">Save</button>
                 </form>
                 {% if data1 %}
