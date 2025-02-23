@@ -33,6 +33,11 @@ urlpatterns = [
     path('deletefavs/<int:pk>', views.deletefavs, name='deletefavs'),
     path('search', views.search_view, name='search'),
     path('viewoders',views.view_odrs),
+    path('product_buy/<id>',views.product_buy, name='product_buy'),
+    path('checkout', views.buy_cart, name='buy_cart'),
+    path('cancel_oder/<id>',views.cancel_order),
+    path('view_details/<id>',views.view_booking_details),
+
 
 
 

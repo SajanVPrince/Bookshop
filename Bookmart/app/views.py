@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import *
 from .models import *
+from django.http import JsonResponse
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
@@ -343,5 +344,122 @@ def view_odrs(req):
         user=User.objects.get(username=req.session['user'])
         buy=Buys.objects.filter(user=user)
         return render (req,'users/myoders.html',{'data':buy})
+    else:
+        return redirect(bk_login)
+    
+
+def product_buy(req, id):
+    if 'user' in req.session:
+        user = User.objects.get(username=req.session['user'])
+        saved_addresses = Userdtl.objects.filter(user=user)
+        prod = None
+        try:
+            prod = Books.objects.get(pk=id)
+        except Books.DoesNotExist:
+            return redirect('home')
+
+        if req.method == 'POST':
+            if 'address_id' in req.POST:
+                selected_address_id = req.POST['address_id']
+                user_address = Userdtl.objects.get(id=selected_address_id)
+            else:
+                fullname = req.POST['fullname']
+                address = req.POST['address']
+                pincode = req.POST['pincode']
+                city = req.POST['city']
+                state = req.POST['state']
+                phone = req.POST['phnum']
+                altphone = req.POST['aphnum']
+                landmark = req.POST['landmark']
+                user_address = Userdtl.objects.create(
+                    user=user,
+                    phone=phone,
+                    fullname=fullname,
+                    city=city,
+                    state=state,
+                    altphone=altphone,
+                    landmark=landmark,
+                    adress=address,
+                    pincode=pincode
+                )
+                user_address.save()
+
+            if prod.stock > 0:
+                # purchase = Buys.objects.create(user=user, product=prod, address=user_address)
+                # purchase.save()
+                prod.stock -= 1
+                prod.save()
+                return redirect(order_success)
+
+        return render(req, 'users/buypage.html', {'prod': prod, 'saved_addresses': saved_addresses})
+    else:
+        return redirect(bk_login)
+    
+
+def buy_cart(request):
+    if 'user' in request.session:
+        user = User.objects.get(username=request.session['user'])
+        cart = Cart.objects.filter(user=user)
+        total_price = sum([item.product.ofr_price for item in cart])
+        total_discount = sum([item.product.price - item.product.ofr_price for item in cart]) 
+        saved_addresses = Userdtl.objects.filter(user=user)
+
+        selected_address = None
+        if request.method == 'POST':
+            # Check if user selected an existing address or added a new one
+            if 'address_id' in request.POST:
+                selected_address = Userdtl.objects.get(id=request.POST['address_id'])
+            elif 'fullname' in request.POST:
+                # Handle the new address submission
+                fullname = request.POST['fullname']
+                address = request.POST['address']
+                pincode = request.POST['pincode']
+                city = request.POST['city']
+                state = request.POST['state']
+                phone = request.POST['phnum']
+                altphone = request.POST['aphnum']
+                landmark = request.POST['landmark']
+
+                # Save the new address
+                selected_address = Userdtl.objects.create(
+                    user=user,
+                    fullname=fullname,
+                    address=address,
+                    pincode=pincode,
+                    city=city,
+                    state=state,
+                    phone=phone,
+                    altphone=altphone,
+                    landmark=landmark
+                )
+
+            # Proceed with the purchase
+            if selected_address:
+                # Here you can add the logic to create a purchase record and reduce product stock
+                return redirect('order_success')  # Redirect to a success page
+
+        return render(request, 'users/checkout.html', {
+            'cart': cart, 
+            'total_price': total_price, 
+            'total_discount': total_discount,
+            'saved_addresses': saved_addresses,
+            'selected_address': selected_address,
+        })
+    else:
+        return redirect('bk_login')
+    
+def cancel_order(req, id):
+    if 'user' in req.session:
+        order = Buys.objects.get(pk=id)
+        order.delete()
+        return redirect(view_odrs)
+    else:
+        return redirect(bk_login)
+    
+def view_booking_details(req,id):
+    if 'user' in req.session:
+        user = User.objects.get(username=req.session['user'])
+        bookings =  Buys.objects.filter(user=user)
+        return render(req, 'users/viewbookingdetails.html', {'bookings': bookings})
     else:
         return redirect(bk_login)

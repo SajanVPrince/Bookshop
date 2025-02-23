@@ -180,7 +180,7 @@
                         <a href="usedbk" class="nav-link">Used Books</a>
                     </li>  
                     <li class="nav-item">
-                        <a href="viewoders" class="nav-link">My Orders</a>
+                        <a href="viewoders" class="nav-link" style="color: #4d3e02;">My Orders</a>
                     </li>
                     <li class="nav-item">
                         <a href="viewfav" class="nav-link">Favorites</a>
@@ -216,7 +216,7 @@
                 <h4 class="offer-price">₹{{i.product.ofr_price}}</h4>
                 <p class="order-description">{{i.product.dis}}</p>
                 <div class="btn-group">
-                    <a href="cancel_oder/{{i.pk}}" class="btn btn-danger btn-action">Cancel Order</a>
+                    <a href="cancel_oder/{{i.pk}}" class="btn btn-danger btn-action" onclick="return confirmCancellation(event)">Cancel Order</a>
                     <a href="view_details/{{i.pk}}" class="btn btn-success btn-action">View Details</a>
                 </div>
             </div>
@@ -268,5 +268,22 @@
                     </div>
                 </div>
             </footer>
+            <script>
+                function confirmCancellation(event) {
+    event.preventDefault(); // Prevent the default action (navigating to the cancel URL)
+    
+    // Show a confirmation dialog
+    const userConfirmed = confirm("Are you sure you want to cancel this order?");
+    
+    if (userConfirmed) {
+        // If the user confirms, redirect to the cancel order URL
+        window.location.href = event.target.href;
+    } else {
+        // If the user cancels, just do nothing (stay on the same page)
+        return false;
+    }
+}
+
+            </script>
 </body>
 </html>
