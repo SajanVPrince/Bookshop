@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewproduct</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+</head>
+<style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+        }
+        #navb {
+            background: linear-gradient(90deg, #80df68 0%, #02810d 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #navb .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        #navb .nav-link {
+            color: white;
+            font-size: 1.1rem;
+            margin-left: 15px;
+        }
+        #navb .nav-link:hover {
+            color: #4d3e02;
+        }
+        #navb .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            border-radius: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .dropdown-item {
+            font-size: 1rem;
+        }
+        .navbar-toggler-icon {
+            background-color: white;
+        }
+        .form-control {
+            border-radius: 20px;
+        }
+        .btnsrch {
+            border-radius: 20px;
+        }
+        .footer {
+            background: linear-gradient(90deg, #80df68 0%, #02810d 100%);
+            color: white;
+            padding: 30px 0;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #7a4f09;
+        }
+
+        /* Container */
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .details:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Image Styling */
+        .product-image {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Content Area Styling */
+        .product-details {
+            flex: 1;
+        }
+
+        .product-details h5 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .product-details h6 {
+            font-size: 1.2rem;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .product-price h3 {
+            font-size: 2rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-price p {
+            font-size: 1.5rem;
+            text-decoration: line-through;
+            color: #888;
+            margin-left: 20px;
+        }
+
+        /* Buttons */
+        .btn-custom {
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        .btn-add-to-favorites {
+            background-color: #28a745;
+            border: none;
+            color: white;
+        }
+
+        .btn-add-to-favorites:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .btn-add-to-cart {
+            background-color: #f0ad4e;
+            border: none;
+            color: white;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #ec971f;
+            transform: scale(1.05);
+        }
+
+        .btn-buy-now {
+            background-color: #007bff;
+            border: none;
+            color: white;
+        }
+
+        .btn-buy-now:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Available Offers Section */
+        .offers {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+
+        .offers p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .b1 {
+            color: #ff4b4b;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Layout */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .product-image {
+                max-width: 90%;
+                margin: 0 auto;
+            }
+
+            .product-details {
+                text-align: center;
+            }
+
+            .product-price {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg" id="navb">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../home">BookMART</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" id="dropdown">
+                        <a href="../../sell" class="nav-link active">Sell Your Book</a>
+                    </li> 
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Books</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="../dramabk">Drama</a></li>
+                            <li><a class="dropdown-item" href="../fantacybk">Fantacy</a></li>
+                            <li><a class="dropdown-item" href="../lovebk">Love</a></li>
+                            <li><a class="dropdown-item" href="../scifibk">Sci-Fi</a></li>
+                            <li><a class="dropdown-item" href="../otherbk">Others</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../usedbk" class="nav-link">Used Books</a>
+                    </li>  
+                    <li class="nav-item">
+                        <a href="../viewoders" class="nav-link">My Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../viewfav" class="nav-link">Favorites</a>
+                    </li>  
+                </ul>
+                <form class="d-flex" onsubmit="return validateSearch()" action="{% url 'search' %}" method="GET">
+                    <input id="searchInput" class="form-control me-2" type="text" name="q" placeholder="Search">
+                    <button class="btn btn-primary"><i class="fa-solid fa-search"></i></button>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="../login"><i class="fa-solid fa-user"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../viewcart"><i class="fa-solid fa-cart-shopping"></i></a>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container details">
+        <!-- Product Image on the Left -->
+        <div class="product-image-container">
+            <img src="{{data.img.url}}" alt="" class="product-image">
+        </div>
+        <!-- Product Content on the Right -->
+        <div class="product-details">
+            <h5>{{data.name}}</h5>
+            <h6>{{data.dis}}</h6>
+            <div class="product-price">
+                <h3 class="p2">{{data.ofr_price}}</h3>
+                <p class="p1"><b>{{data.price}}</b></p>
+            </div>
+            <br>
+            <p><b>Available Offers</b></p>
+            <div class="offers">
+                <p><b class="b1">Bank Offer</b> 5% Unlimited Cashback on Flikart Axs Bank Credit Card</p>
+                <p><b class="b1">Bank Offer</b> Flat ₹1,200 off on HFC Bank Credit Card EMI Txns on 6 and 9 months tenure, Min. Txn Value: ₹15,000</p>
+                <p><b class="b1">Bank Offer</b>Flat ₹1,500 off on HFC Bank Credit Card EMI Txns on 12 months tenure, Min. Txn Value: ₹15,000</p>
+            </div>
+
+            <!-- Buttons -->
+            <a href="../favbk/{{data.pk}}" class="btn btn-custom btn-add-to-favorites">Add to Favorites</a>
+            <a href="../add_to_cart/{{data.pk}}" class="btn btn-custom btn-add-to-cart">Add to Cart</a>
+            <a href="../product_buy/{{data.pk}}" class="btn btn-custom btn-buy-now">Buy Now</a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <h4>BookMART</h4>
+                    <ul>
+                        <li><a href="about">About Us</a></li>
+                        <li><a href="service">Our Services</a></li>
+                        <li><a href="privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Get Help</h4>
+                    <ul>
+                        <li><a href="faq">FAQ</a></li>
+                        <li><a href="vieworders">Order Status</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Navigate</h4>
+                    <ul>
+                        <li><a href="home">Home</a></li>
+                        <li><a href="usedbk">Used Book</a></li>
+                        <li><a href="viewcart">Cart</a></li>
+                        <li><a href="viewfav">Favorites</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-solid fa-x"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function validateSearch() {
+            const searchValue = document.getElementById("searchInput").value.trim();
+            if (searchValue === "") {
+                alert("Please enter something to search.");
+                return false; 
+            }
+            return true; 
+        }
+    </script>
+</body>
+</html>

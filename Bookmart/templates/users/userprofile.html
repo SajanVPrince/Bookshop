@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <style>
+        #navb {
+            background: linear-gradient(90deg, #80df68 0%, #02810d 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #navb .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        #navb .nav-link {
+            color: white;
+            font-size: 1.1rem;
+            margin-left: 15px;
+        }
+        #navb .nav-link:hover {
+            color: #4d3e02;
+        }
+        #navb .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            border-radius: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .dropdown-item {
+            font-size: 1rem;
+        }
+        .navbar-toggler-icon {
+            background-color: white;
+        }
+        .form-control {
+            border-radius: 20px;
+        }
+        .btnsrch {
+            border-radius: 20px;
+        }
+        .footer {
+            background: linear-gradient(90deg, #80df68 0%, #02810d 100%);
+            color: white;
+            padding: 30px 0;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #7a4f09;
+        }
+        .userpro {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+      padding: 30px;
+    }
+
+    .col-lg-6 {
+      width: 45%;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .content-div {
+    display: none;
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(30px);
+      opacity: 0;
+      animation: fadeIn 0.8s forwards;
+    }
+
+    .content-div h4 {
+      color: #3a3a3a;
+      font-size: 24px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .content-div input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    .content-div button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .content-div button:hover {
+      background-color: #6a11cb;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      text-align: center;
+      border-radius: 6px;
+      color: white;
+      background-color: #2575fc;
+      text-decoration: none;
+      display: block;
+      margin-top: 15px;
+      font-size: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #6a11cb;
+      transform: scale(1.05);
+    }
+
+    .alert {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #ffcc00;
+      color: #333;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    /* Slide in effect */
+    @keyframes fadeIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Hover effects for buttons */
+    .btn-outline-danger:hover {
+      background-color: #ff4d4d;
+    }
+
+    /* Responsive styling */
+    @media (max-width: 768px) {
+      .col-lg-6 {
+        width: 100%;
+      }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg" id="navb">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="home">BookMART</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" id="dropdown">
+                        <a href="sell" class="nav-link active">Sell Your Book</a>
+                    </li> 
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Books</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="dramabk">Drama</a></li>
+                            <li><a class="dropdown-item" href="fantacybk">Fantacy</a></li>
+                            <li><a class="dropdown-item" href="lovebk">Love</a></li>
+                            <li><a class="dropdown-item" href="scifibk">Sci-Fi</a></li>
+                            <li><a class="dropdown-item" href="otherbk">Others</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="usedbk" class="nav-link">Used Books</a>
+                    </li>  
+                    <li class="nav-item">
+                        <a href="viewoders" class="nav-link">My Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="viewfav" class="nav-link">Favorites</a>
+                    </li>  
+                </ul>
+                <form class="d-flex">
+                    <!-- <input class="form-control me-2" type="text" placeholder="Search">
+                    <button class="btn btn-primary"><i class="fa-solid fa-search"></i></button> -->
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="login"><i class="fa-solid fa-user"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="viewcart"><i class="fa-solid fa-cart-shopping"></i></a>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container userpro">
+        <div class="col-lg-6">
+            <h2 style="color: brown;">Hello! {{data.first_name}}</h2>
+            <a href="viewoders" class="btn btn-secondary">My Orders</a>
+            <a href="#" class="btn btn-secondary" onclick="showDiv('manageadd')">Manage Address</a>
+            <a href="soldbooks" class="btn btn-secondary">Books You Sold</a>
+            <a href="viewcart" class="btn btn-secondary">My Cart</a>
+            <a href="viewfav" class="btn btn-secondary">My Favorites</a>
+            <a href="#" class="btn btn-outline-danger" onclick="showDiv('changepass')">Change Password</a>
+            <a href="logout" class="btn btn-danger">Log out</a>
+        </div>
+
+        <div class="col-lg-6">
+            <!-- Manage Address Form -->
+            <div id="manageadd" class="content-div">
+                <h4>Add Address</h4>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="text" placeholder="Full Name" name="name" value="" class="form-control"> <br>
+                    <input type="number" placeholder="Phone No." name="phn" value="" class="form-control"><br>
+                    <input type="number" placeholder="Alternate Phone No." name="altphn" value="" class="form-control"><br>
+                    <input type="number" placeholder="Pincode" name="pin" value="" class="form-control"><br>
+                    <input type="text" name="land" placeholder="Landmark" class="form-control"><br>
+                    <input type="text" name="adrs" placeholder="Address" class="form-control"><br>
+                    <input type="text" name="city" placeholder="City/District/Town" class="form-control"><br>
+                    <input type="text" name="state" placeholder="State" class="form-control"><br>
+                    <button type="submit" class="btn btn-outline-primary">Save</button>
+                </form>
+                {% if data1 %}
+                {% for i in data1 %}
+                <div class="content-div">
+                      <h6 class="card-text"><b>Name : </b>{{i.fullname}}</h6>
+                      <h6 class="card-text"> <b>Phone : </b> {{i.phone}}</h6>
+                      <h6 class="card-text"><b>Alternate Phone :</b> {{i.altphone}}</h6>
+                      <h6 class="card-text"><b>Pincode :</b>{{i.pincode}}</h6>
+                      <h6 class="card-text"><b>Landmark :</b>{{i.landmark}}</h6>
+                      <h6 class="card-text"><b>Address : </b>{{i.adress}}</h6>
+                      <h6 class="card-text"><b>City : </b>{{i.city}}</h6>
+                      <h6 class="card-text"><b>State : </b>{{i.state}}</h6>
+                      <a href="delete_address/{{i.pk}}" class="btn btn-danger">Delete</a>
+                  </div>
+                {% endfor %}
+              {% else %}
+              <h6 style="text-align: center;margin-top: 10%;">No Saved Address available.....</h6>
+              {% endif %}
+            </div>
+            
+
+            <!-- Change Password Form -->
+            <div id="changepass" class="content-div">
+                <h3>Change Your Current Password</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" placeholder="Enter your old password" name="oldpass" required>
+                    <input type="password" placeholder="Enter your New Password" name="newpass" required>
+                    <button type="submit">Change</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+        <footer class="footer mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <h4>BookMART</h4>
+                        <ul>
+                            <li><a href="about">About Us</a></li>
+                            <li><a href="service">Our Services</a></li>
+                            <li><a href="privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h4>Get Help</h4>
+                        <ul>
+                            <li><a href="faq">FAQ</a></li>
+                            <li><a href="vieworders">Order Status</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h4>Navigate</h4>
+                        <ul>
+                            <li><a href="home">Home</a></li>
+                            <li><a href="usedbk">Used Book</a></li>
+                            <li><a href="viewcart">Cart</a></li>
+                            <li><a href="viewfav">Favorites</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h4>Follow Us</h4>
+                        <div class="social-links">
+                            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="#"><i class="fa-solid fa-x"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script>
+            // JavaScript function to show/hide sections
+            function showDiv(divId) {
+                // Hide all content divs
+                const contentDivs = document.querySelectorAll('.content-div');
+                contentDivs.forEach(div => div.style.display = "none");
+    
+                // Show the selected content div
+                const selectedDiv = document.getElementById(divId);
+                if (selectedDiv) {
+                    selectedDiv.style.display = "block";
+                }
+            }
+    
+            // By default, display 'manageadd' div when the page loads
+            window.onload = function() {
+                showDiv('manageadd');
+            }
+        </script>
+    
+</body>
+</html>
