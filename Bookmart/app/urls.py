@@ -32,6 +32,15 @@ urlpatterns = [
     path('edit_sfantacy/<id>',views.edit_sfantacy),
     path('edit_sscifi/<id>',views.edit_sscifi),
     path('edit_sothers/<id>',views.edit_sothers),
+    path('viewuser',views.view_user),
+    path('deleteuser/<id>',views.delete_user),
+    path('viewreview',views.view_review),
+    path('deletereview/<id>',views.delete_review),
+    path('viewbuy',views.view_buy),
+    path('viewbookingdetails',views.viewbookingdetails),
+
+
+
 
     # ---USER----
     path('',views.bk_home),

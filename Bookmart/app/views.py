@@ -353,6 +353,41 @@ def edit_sothers(req, id):
             return render(req, 'admin/othersedit.html', {'data': data})
     else:
         return redirect('bk_login')
+    
+def view_user(req):
+    if 'shop' in req.session:
+        data=User.objects.all()
+        return render(req,'admin/users.html',{'data':data})
+    else:
+        return redirect(bk_login)
+    
+def delete_user(req,id):
+    user=User.objects.get(pk=id)
+    user.delete()
+    return redirect(view_user)
+
+def view_review(req):
+    if 'shop' in req.session:
+        data=Review.objects.all()
+        return render(req,'admin/review.html',{'data':data})
+    else:
+        return redirect(bk_login)
+    
+def delete_review(req,id):
+    review=Review.objects.get(pk=id)
+    review.delete()
+    return redirect(view_review)
+
+def view_buy(req):
+    if 'shop' in req.session:
+        data=Buys.objects.all()
+        return render(req,'admin/buy.html',{'data':data})
+    else:
+        return redirect(bk_login)
+    
+def viewbookingdetails(request):
+    buys = Buys.objects.all().select_related('product', 'user', 'address')
+    return render(request, 'admin/viewbookingdetails.html', {'buys': buys})
 
 # ---USER------
 
