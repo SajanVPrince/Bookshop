@@ -124,10 +124,16 @@
                 <a href="addbook" class="nav-link">Add Book
                 </a>
               </li>  -->
-              <li class="nav-item" id="dropdown">
-                <a href="viewbook" class="nav-link" id="dropbtn">Books
-                </a>
-              </li> 
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Books</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="../dramasbk">Drama</a></li>
+                  <li><a class="dropdown-item" href="../fantacysbk">Fantacy</a></li>
+                  <li><a class="dropdown-item" href="../lovesbk">Love</a></li>
+                  <li><a class="dropdown-item" href="../scifisbk">Sci-Fi</a></li>
+                  <li><a class="dropdown-item" href="../othersbk">Others</a></li>
+                </ul>
+              </li>  
               <li class="nav-item" id="dropdown">
                 <a href="viewuser" class="nav-link" id="dropbtn"> Users
                 </a>
@@ -155,7 +161,7 @@
             <h2 class="text-center" style="color: #8B4513; font-family: 'Arial', sans-serif; font-weight: 600; font-size: 36px;">Hello, Admin</h2>
             <div class="btn-container">
               <a href="addbook" class="btn custom-btn">Add Book</a>
-              <a href="viewbook" class="btn custom-btn">View Book</a>
+              <!-- <a href="viewbook" class="btn custom-btn">View Book</a> -->
               <a href="viewsbook" class="btn custom-btn">Selled Books by Users</a>
               <a href="viewbuy" class="btn custom-btn">Orders</a>
               <a href="viewreview" class="btn custom-btn">Reviews</a>

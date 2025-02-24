@@ -178,8 +178,181 @@ def adhome(req):
     else:
         return render(req,'admin/admin.html')
     
+def sdrama(req):
+    data=Books.objects.filter(bk_genres='drama')[::-1]
+    return render(req,'admin/books/sdrama.html',{'data':data})
 
+def slove(req):
+    data=Books.objects.filter(bk_genres='love')[::-1]
+    return render(req,'admin/books/slove.html',{'data':data})
 
+def sfantacy(req):
+    data=Books.objects.filter(bk_genres='fantasy')[::-1]
+    return render(req,'admin/books/sfantacy.html',{'data':data})
+
+def sscifi(req):
+    data=Books.objects.filter(bk_genres='sci-fi')[::-1]
+    return render(req,'admin/books/sscifi.html',{'data':data})
+
+def sothers(req):
+    data=Books.objects.filter(bk_genres='others')[::-1]
+    return render(req,'admin/books/sothers.html',{'data':data})   
+
+def delete_sdrama(req,id):
+    book=Books.objects.get(pk=id)
+    book.delete()
+    return redirect(sdrama) 
+
+def delete_slove(req,id):
+    book=Books.objects.get(pk=id)
+    book.delete()
+    return redirect(slove) 
+
+def delete_sscifi(req,id):
+    book=Books.objects.get(pk=id)
+    book.delete()
+    return redirect(sscifi) 
+
+def delete_sfantacy(req,id):
+    book=Books.objects.get(pk=id)
+    book.delete()
+    return redirect(sfantacy) 
+
+def delete_sothers(req,id):
+    book=Books.objects.get(pk=id)
+    book.delete()
+    return redirect(sothers) 
+    
+
+def edit_sdrama(req, id):
+    if 'shop' in req.session:
+        data = Books.objects.get(pk=id)
+        if req.method == 'POST':
+            bk_name = req.POST['bk_name']
+            ath_name = req.POST['ath_name']
+            bk_ofr_price = req.POST['bk_ofr_price']
+            bk_genres = req.POST['bk_genres']
+            img = req.FILES.get('img') 
+            bk_dis = req.POST['bk_dis']
+            stock = req.POST['stock']
+            data.name = bk_name
+            data.ath_name = ath_name
+            data.ofr_price = bk_ofr_price
+            data.bk_genres = bk_genres
+            data.dis = bk_dis
+            data.stock = stock
+            if img:
+                data.img = img
+            data.save() 
+            return redirect(sdrama)  
+        else:
+            return render(req, 'admin/dramaedit.html', {'data': data})
+    else:
+        return redirect('bk_login')
+
+def edit_slove(req, id):
+    if 'shop' in req.session:
+        data = Books.objects.get(pk=id)
+        if req.method == 'POST':
+            bk_name = req.POST['bk_name']
+            ath_name = req.POST['ath_name']
+            bk_ofr_price = req.POST['bk_ofr_price']
+            bk_genres = req.POST['bk_genres']
+            img = req.FILES.get('img') 
+            bk_dis = req.POST['bk_dis']
+            stock = req.POST['stock']
+            data.name = bk_name
+            data.ath_name = ath_name
+            data.ofr_price = bk_ofr_price
+            data.bk_genres = bk_genres
+            data.dis = bk_dis
+            data.stock = stock
+            if img:
+                data.img = img
+            data.save() 
+            return redirect(slove)  
+        else:
+            return render(req, 'admin/lovedit.html', {'data': data})
+    else:
+        return redirect('bk_login')  
+    
+def edit_sfantacy(req, id):
+    if 'shop' in req.session:
+        data = Books.objects.get(pk=id)
+        if req.method == 'POST':
+            bk_name = req.POST['bk_name']
+            ath_name = req.POST['ath_name']
+            bk_ofr_price = req.POST['bk_ofr_price']
+            bk_genres = req.POST['bk_genres']
+            img = req.FILES.get('img') 
+            bk_dis = req.POST['bk_dis']
+            stock = req.POST['stock']
+            data.name = bk_name
+            data.ath_name = ath_name
+            data.ofr_price = bk_ofr_price
+            data.bk_genres = bk_genres
+            data.dis = bk_dis
+            data.stock = stock
+            if img:
+                data.img = img
+            data.save() 
+            return redirect(sfantacy)  
+        else:
+            return render(req, 'admin/fantacyedit.html', {'data': data})
+    else:
+        return redirect('bk_login')
+
+def edit_sscifi(req, id):
+    if 'shop' in req.session:
+        data = Books.objects.get(pk=id)
+        if req.method == 'POST':
+            bk_name = req.POST['bk_name']
+            ath_name = req.POST['ath_name']
+            bk_ofr_price = req.POST['bk_ofr_price']
+            bk_genres = req.POST['bk_genres']
+            img = req.FILES.get('img') 
+            bk_dis = req.POST['bk_dis']
+            stock = req.POST['stock']
+            data.name = bk_name
+            data.ath_name = ath_name
+            data.ofr_price = bk_ofr_price
+            data.bk_genres = bk_genres
+            data.dis = bk_dis
+            data.stock = stock
+            if img:
+                data.img = img
+            data.save() 
+            return redirect(sscifi)  
+        else:
+            return render(req, 'admin/scifiedit.html', {'data': data})
+    else:
+        return redirect('bk_login')
+    
+def edit_sothers(req, id):
+    if 'shop' in req.session:
+        data = Books.objects.get(pk=id)
+        if req.method == 'POST':
+            bk_name = req.POST['bk_name']
+            ath_name = req.POST['ath_name']
+            bk_ofr_price = req.POST['bk_ofr_price']
+            bk_genres = req.POST['bk_genres']
+            img = req.FILES.get('img') 
+            bk_dis = req.POST['bk_dis']
+            stock = req.POST['stock']
+            data.name = bk_name
+            data.ath_name = ath_name
+            data.ofr_price = bk_ofr_price
+            data.bk_genres = bk_genres
+            data.dis = bk_dis
+            data.stock = stock
+            if img:
+                data.img = img
+            data.save() 
+            return redirect(sothers)  
+        else:
+            return render(req, 'admin/othersedit.html', {'data': data})
+    else:
+        return redirect('bk_login')
 
 # ---USER------
 
@@ -224,10 +397,6 @@ def others(req):
 def view_prod(req,id):
     data=Books.objects.get(pk=id)
     return render(req,'users/viewprod.html',{'data':data})
-
-def view_sprod(req,id):
-    data=Sbook.objects.get(pk=id)
-    return render(req,'users/viewsprod.html',{'data':data})
 
 def userpro(req):
     if 'user' in req.session:

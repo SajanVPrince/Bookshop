@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('login',views.bk_login, name='login'),
+    path('login',views.bk_login, name='bk_login'),
     path('logout',views.bk_logout , name='logout'),
     path('register',views.register , name='register'),
     path('verifyotp',views.verify_otp, name='verify_otp'),
@@ -17,6 +17,21 @@ urlpatterns = [
 
     path('adminpro',views.adminpro),
     path('adhome',views.adhome),
+    path('dramasbk',views.sdrama),
+    path('lovesbk',views.slove),
+    path('fantacysbk',views.sfantacy),
+    path('scifisbk',views.sscifi),
+    path('othersbk',views.sothers),
+    path('delete_sdrama/<id>',views.delete_sdrama),
+    path('delete_slove/<id>',views.delete_slove),
+    path('delete_sfantacy/<id>',views.delete_sfantacy),
+    path('delete_sscifi/<id>',views.delete_sscifi),
+    path('delete_sothers/<id>',views.delete_sothers),
+    path('edit_sdrama/<id>',views.edit_sdrama),
+    path('edit_slove/<id>',views.edit_slove),
+    path('edit_sfantacy/<id>',views.edit_sfantacy),
+    path('edit_sscifi/<id>',views.edit_sscifi),
+    path('edit_sothers/<id>',views.edit_sothers),
 
     # ---USER----
     path('',views.bk_home),
@@ -27,7 +42,6 @@ urlpatterns = [
     path('scifibk',views.scifi),
     path('otherbk',views.others),
     path('viewprod/<id>',views.view_prod),
-    path('viewsprod/<id>',views.view_sprod),
     path('userpro',views.userpro ,name='userpro'),
     path('viewcart',views.viewcart),
     path('add_to_cart/<pid>',views.add_to_cart),
