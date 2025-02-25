@@ -215,9 +215,13 @@
                 <s><h6 class="original-price">₹{{i.product.price}}</h6></s>
                 <h4 class="offer-price">₹{{i.product.ofr_price}}</h4>
                 <p class="order-description">{{i.product.dis}}</p>
-                <div class="btn-group">
-                    <a href="cancel_oder/{{i.pk}}" class="btn btn-danger btn-action" onclick="return confirmCancellation(event)">Cancel Order</a>
-                    <a href="view_details/{{i.pk}}" class="btn btn-success btn-action">View Details</a>
+                <p class="order-description">{{i.status}}</p>
+                <div class="btn-group"></div>
+                {% if i.status != 'Delivered' and i.status != 'Canceled' %}
+                <a href="cancel_oder/{{ i.pk }}" class="btn btn-danger btn-action" onclick="return confirmCancellation(event)">Cancel Order</a>
+                {% endif %}
+                <a href="view_details/{{i.pk}}" class="btn btn-success btn-action">View Details</a>
+                </div>
                 </div>
             </div>
         </div>

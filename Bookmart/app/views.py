@@ -7,6 +7,11 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.crypto import get_random_string
+import razorpay
+from django.conf import settings
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Sum
+from django.urls import reverse
 
 
 def bk_login(req):
@@ -230,6 +235,7 @@ def edit_sdrama(req, id):
         if req.method == 'POST':
             bk_name = req.POST['bk_name']
             ath_name = req.POST['ath_name']
+            bk_price = req.POST['bk_price']
             bk_ofr_price = req.POST['bk_ofr_price']
             bk_genres = req.POST['bk_genres']
             img = req.FILES.get('img') 
@@ -237,6 +243,7 @@ def edit_sdrama(req, id):
             stock = req.POST['stock']
             data.name = bk_name
             data.ath_name = ath_name
+            data.price = bk_price
             data.ofr_price = bk_ofr_price
             data.bk_genres = bk_genres
             data.dis = bk_dis
@@ -256,6 +263,7 @@ def edit_slove(req, id):
         if req.method == 'POST':
             bk_name = req.POST['bk_name']
             ath_name = req.POST['ath_name']
+            bk_price = req.POST['bk_price']
             bk_ofr_price = req.POST['bk_ofr_price']
             bk_genres = req.POST['bk_genres']
             img = req.FILES.get('img') 
@@ -263,6 +271,7 @@ def edit_slove(req, id):
             stock = req.POST['stock']
             data.name = bk_name
             data.ath_name = ath_name
+            data.price = bk_price
             data.ofr_price = bk_ofr_price
             data.bk_genres = bk_genres
             data.dis = bk_dis
@@ -272,7 +281,7 @@ def edit_slove(req, id):
             data.save() 
             return redirect(slove)  
         else:
-            return render(req, 'admin/lovedit.html', {'data': data})
+            return render(req, 'admin/loveedit.html', {'data': data})
     else:
         return redirect('bk_login')  
     
@@ -282,6 +291,7 @@ def edit_sfantacy(req, id):
         if req.method == 'POST':
             bk_name = req.POST['bk_name']
             ath_name = req.POST['ath_name']
+            bk_price = req.POST['bk_price']
             bk_ofr_price = req.POST['bk_ofr_price']
             bk_genres = req.POST['bk_genres']
             img = req.FILES.get('img') 
@@ -289,6 +299,7 @@ def edit_sfantacy(req, id):
             stock = req.POST['stock']
             data.name = bk_name
             data.ath_name = ath_name
+            data.price = bk_price
             data.ofr_price = bk_ofr_price
             data.bk_genres = bk_genres
             data.dis = bk_dis
@@ -308,6 +319,7 @@ def edit_sscifi(req, id):
         if req.method == 'POST':
             bk_name = req.POST['bk_name']
             ath_name = req.POST['ath_name']
+            bk_price = req.POST['bk_price']
             bk_ofr_price = req.POST['bk_ofr_price']
             bk_genres = req.POST['bk_genres']
             img = req.FILES.get('img') 
@@ -315,6 +327,7 @@ def edit_sscifi(req, id):
             stock = req.POST['stock']
             data.name = bk_name
             data.ath_name = ath_name
+            data.price = bk_price
             data.ofr_price = bk_ofr_price
             data.bk_genres = bk_genres
             data.dis = bk_dis
@@ -334,6 +347,7 @@ def edit_sothers(req, id):
         if req.method == 'POST':
             bk_name = req.POST['bk_name']
             ath_name = req.POST['ath_name']
+            bk_price = req.POST['bk_price']
             bk_ofr_price = req.POST['bk_ofr_price']
             bk_genres = req.POST['bk_genres']
             img = req.FILES.get('img') 
@@ -380,14 +394,101 @@ def delete_review(req,id):
 
 def view_buy(req):
     if 'shop' in req.session:
-        data=Buys.objects.all()
+        data=Buy.objects.all()
         return render(req,'admin/buy.html',{'data':data})
     else:
         return redirect(bk_login)
     
 def viewbookingdetails(request):
-    buys = Buys.objects.all().select_related('product', 'user', 'address')
-    return render(request, 'admin/viewbookingdetails.html', {'buys': buys})
+    Buy = Buy.objects.all().select_related('product', 'user', 'address')
+    return render(request, 'admin/viewbookingdetails.html', {'Buy': Buy})
+
+
+def update(req):
+    if req.method == "POST":
+        for key, value in req.POST.items():
+            if key.startswith('status_'):
+                buy_id = key.split('_')[1]
+                try:
+                    buy = Buy.objects.get(id=buy_id)
+                    if buy.status != value:
+                        buy.status = value
+                        buy.save()
+                        # Create or update the associated order
+                        order, created = Order.objects.get_or_create(buy=buy)
+                        order.customer_name = buy.user.username
+                        order.phone_number = buy.user.userprofile.phone_number if hasattr(buy.user, 'userprofile') else "N/A"
+                        order.email = buy.user.email if buy.user.email else "N/A"
+                        order.address = buy.user.userprofile.address if hasattr(buy.user, 'userprofile') else "N/A"
+                        order.save()
+
+                        # Add success message
+                        messages.success(req, f"Order {buy_id} status updated to {value}.")
+                    else:
+                        messages.info(req, f"Order {buy_id} status is already {value}.")
+                except Buy.DoesNotExist:
+                    messages.error(req, f"Order {buy_id} not found.")
+        return redirect(update)
+
+    # Fetch Buy objects and their associated Orders
+    buys = Buy.objects.all().order_by('-date')
+    combined_data = []
+
+    for buy in buys:
+        order = Order.objects.filter(buy=buy).first()  # Get the correct order linked to this Buy
+        
+        # Ensure there's always an order linked to Buy
+        if not order:
+            order = Order.objects.create(
+                buy=buy,
+                customer_name=buy.user.username,
+                phone_number=buy.user.userprofile.phone_number if hasattr(buy.user, 'userprofile') else "N/A",
+                email=buy.user.email if buy.user.email else "N/A",
+                address=buy.user.userprofile.address if hasattr(buy.user, 'userprofile') else "N/A",
+            )
+
+        combined_data.append({'buy': buy, 'order': order})
+
+    return render(req, 'admin/update.html', {'combined_data': combined_data})
+
+def create_order(request, buy_id):
+    try:
+        # Get the Buy object using the buy_id
+        buy = Buy.objects.get(id=buy_id)
+    except Buy.DoesNotExist:
+        messages.error(request, "The specified order could not be found.")
+        return redirect(update)
+
+    # Check if an Order already exists for this Buy
+    order = Order.objects.filter(buy=buy).first()
+
+    if order:
+        # If an order already exists, notify the user and do not create a duplicate order
+        messages.info(request, f"An order already exists for {buy.product.name}. No duplicate created.")
+    else:
+        # If no order exists, create a new Order
+        try:
+            # Get user details from the userprofile (or provide default values if profile is missing)
+            user_profile = buy.user.userprofile if hasattr(buy.user, 'userprofile') else None
+            phone_number = user_profile.phone_number if user_profile else "N/A"
+            address = user_profile.address if user_profile else "N/A"
+            email = buy.user.email if buy.user.email else "N/A"
+            
+            # Create new order linked to this Buy
+            order = Order.objects.create(
+                buy=buy,
+                customer_name=buy.user.username,
+                phone_number=phone_number,
+                email=email,
+                address=address,
+            )
+            messages.success(request, f"Order for {buy.product.name} created successfully!")
+        except Exception as e:
+            messages.error(request, f"Error occurred while creating the order: {str(e)}")
+            return redirect(update)
+
+    return redirect(update)
+
 
 # ---USER------
 
@@ -438,7 +539,6 @@ def userpro(req):
         user = User.objects.get(username=req.session['user'])
         data1 = Userdtl.objects.filter(user=user)
         
-        # Check if address form is being submitted
         if req.method == 'POST' and 'name' in req.POST:
             name = req.POST['name']
             phn = req.POST['phn']
@@ -449,7 +549,6 @@ def userpro(req):
             city = req.POST['city']
             state = req.POST['state']
             
-            # Check if address already exists before saving
             existing_address = Userdtl.objects.filter(
                 user=user,
                 fullname=name,
@@ -463,7 +562,6 @@ def userpro(req):
             ).first()
 
             if not existing_address:
-                # Create a new address if not already existing
                 data = Userdtl.objects.create(
                     user=user,
                     fullname=name,
@@ -477,8 +575,6 @@ def userpro(req):
                 )
                 data.save()
             return redirect(userpro)
-        
-        # Check if password change form is being submitted
         elif req.method == 'POST' and 'oldpass' in req.POST:
             old_pass = req.POST['oldpass']
             new_pass = req.POST['newpass']
@@ -578,11 +674,13 @@ def deletefavs(request, pk):
 def view_odrs(req):
     if 'user' in req.session:
         user=User.objects.get(username=req.session['user'])
-        buy=Buys.objects.filter(user=user)
+        buy=Buy.objects.filter(user=user)
         return render (req,'users/myoders.html',{'data':buy})
     else:
         return redirect(bk_login)
     
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
 
 def product_buy(req, id):
     if 'user' in req.session:
@@ -593,7 +691,6 @@ def product_buy(req, id):
             prod = Books.objects.get(pk=id)
         except Books.DoesNotExist:
             return redirect('home')
-
         if req.method == 'POST':
             if 'address_id' in req.POST:
                 selected_address_id = req.POST['address_id']
@@ -607,6 +704,7 @@ def product_buy(req, id):
                 phone = req.POST['phone']
                 altphone = req.POST['altphone']
                 landmark = req.POST['landmark']
+                
                 user_address = Userdtl.objects.create(
                     user=user,
                     phone=phone,
@@ -619,8 +717,25 @@ def product_buy(req, id):
                     pincode=pincode
                 )
                 user_address.save()
+            order = Buy.objects.create(
+                user=user,
+                product=prod,
+                quantity=1,
+                status='Pending',  
+            )
 
-            # Store the order data temporarily in the session
+            order_amount = int(prod.ofr_price * 100)  
+            order_currency = "INR"
+            order_receipt = f"order_rcpt_{order.id}"
+
+            razorpay_order = razorpay_client.order.create({
+                "amount": order_amount,
+                "currency": order_currency,
+                "receipt": order_receipt,
+                "payment_capture": 1
+            })
+            order.razorpay_order_id = razorpay_order['id']
+            order.save()
             order_data = {
                 'cart': [{'product': prod.id, 'quantity': 1}],
                 'selected_address': {
@@ -636,164 +751,280 @@ def product_buy(req, id):
                 'total_price': prod.ofr_price,
                 'total_discount': prod.price - prod.ofr_price
             }
-            req.session['order_data'] = order_data  # Store in session
-            
-            return redirect('order_success')  # Redirect to success page
+            req.session['order_data'] = order_data
+            return redirect(reverse('create_razorpay_order', args=[order.id]))
 
         return render(req, 'users/buypage.html', {'prod': prod, 'saved_addresses': saved_addresses})
+
     else:
         return redirect('bk_login')
 
+
+def create_razorpay_order(request, buy_id):
+    buy = get_object_or_404(Buy, id=buy_id)
+    
+    order_amount = int(buy.product.ofr_price * 100)  
+    razorpay_order = razorpay_client.order.create({
+        "amount": order_amount,
+        "currency": "INR",
+        "receipt": f"order_rcpt_{buy.id}",
+        "payment_capture": 1
+    })
+
+    buy.razorpay_order_id = razorpay_order['id']
+    buy.save()
+    display_amount = order_amount / 100
+
+    return render(request, 'users/payment.html', {
+        'order_id': razorpay_order['id'],
+        'amount': display_amount,  
+        'key': settings.RAZORPAY_KEY_ID,
+    })
 
 def buy_cart(request):
-    if 'user' in request.session:
-        user = User.objects.get(username=request.session['user'])
-        cart = Cart.objects.filter(user=user)
-        total_price = sum([item.product.ofr_price for item in cart])
-        total_discount = sum([item.product.price - item.product.ofr_price for item in cart])
-        saved_addresses = Userdtl.objects.filter(user=user)
+    # Ensure the user is logged in
+    user = User.objects.get(username=request.session['user'])
+    
+    # Get the user's cart
+    cart = Cart.objects.filter(user=user)
+    # In your view
+    total_price = sum([item.product.ofr_price for item in cart])
+    total_discount = sum([item.product.price - item.product.ofr_price for item in cart])
 
-        selected_address = None
-        if request.method == 'POST':
-            # Check if user selected an existing address or added a new one
-            if 'address_id' in request.POST:
-                selected_address = Userdtl.objects.get(id=request.POST['address_id'])
-            elif 'fullname' in request.POST:
-                # Handle the new address submission
-                fullname = request.POST['fullname']
-                address = request.POST['address']
-                pincode = request.POST['pincode']
-                city = request.POST['city']
-                state = request.POST['state']
-                phone = request.POST['phnum']
-                altphone = request.POST['aphnum']
-                landmark = request.POST['landmark']
+    # Multiply the total_price in the view
+    total_price_in_paise = total_price * 100
 
-                # Save the new address
-                selected_address = Userdtl.objects.create(
-                    user=user,
-                    fullname=fullname,
-                    address=address,
-                    pincode=pincode,
-                    city=city,
-                    state=state,
-                    phone=phone,
-                    altphone=altphone,
-                    landmark=landmark
-                )
 
-            # Store cart data and selected address in session for later use
-            order_data = {
-                'cart': list(cart.values()),
-                'selected_address': {
-                    'fullname': selected_address.fullname,
-                    'address': selected_address.adress,
-                    'city': selected_address.city,
-                    'state': selected_address.state,
-                    'pincode': selected_address.pincode,
-                    'phone': selected_address.phone,
-                    'altphone': selected_address.altphone,
-                    'landmark': selected_address.landmark,
-                },
-                'total_price': total_price,
-                'total_discount': total_discount
-            }
-            request.session['order_data'] = order_data  # Store in session
-            
-            return redirect('order_success')  # Redirect to success page
+    # Get the saved addresses of the user
+    saved_addresses = Userdtl.objects.filter(user=user)
 
+    # If no saved addresses, prompt the user to add one
+    if not saved_addresses:
         return render(request, 'users/checkout.html', {
-            'cart': cart, 
-            'total_price': total_price, 
+            'cart': cart,
+            'total_price': total_price,
             'total_discount': total_discount,
             'saved_addresses': saved_addresses,
+            'address_message': 'Please add an address in your profile before proceeding with the order.'
         })
+
+    # Handling POST request to select an address and proceed
+    if request.method == 'POST':
+        selected_address = None
+        
+        # Check if an address has been selected
+        if 'address_id' in request.POST:
+            selected_address = Userdtl.objects.get(id=request.POST['address_id'])
+        
+        # If no address is selected, show an error message
+        if not selected_address:
+            return render(request, 'users/checkout.html', {
+                'cart': cart,
+                'total_price': total_price,
+                'total_discount': total_discount,
+                'saved_addresses': saved_addresses,
+                'address_message': 'Please select an existing address to proceed with your order.'
+            })
+        
+        # Proceed with creating the Buy model instance for each product in the cart
+        buy_instances = []  # Store created Buy instances to check the result
+
+        for item in cart:
+            # Create a Buy instance for each product in the cart
+            buy_instance = Buy(
+                user=user,
+                product=item.product,
+                quantity=1,  # Assuming quantity of 1 for each item in the cart
+                status='Pending',
+                razorpay_order_id=None,  # This will be updated with Razorpay order ID later
+                payment_status='Pending'
+            )
+            buy_instance.save()  # Save each Buy instance
+            buy_instances.append(buy_instance)  # Add to the list to check if anything was created
+
+        # If no Buy instances were created, return an error
+        if not buy_instances:
+            return render(request, 'users/checkout.html', {
+                'cart': cart,
+                'total_price': total_price,
+                'total_discount': total_discount,
+                'saved_addresses': saved_addresses,
+                'address_message': 'No items in your cart to proceed with the order.'
+            })
+
+        # Clear the cart after order creation
+        cart.delete()
+
+        # Create Razorpay Order
+        razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+
+        # Create the Razorpay order
+        razorpay_order = razorpay_client.order.create({
+            'amount': int(total_price * 100),  # Amount should be in paise
+            'currency': 'INR',
+            'payment_capture': '1'
+        })
+
+        razorpay_order_id = razorpay_order['id']
+
+        # Update the order with the Razorpay order ID
+        for buy_instance in buy_instances:
+            buy_instance.razorpay_order_id = razorpay_order_id
+            buy_instance.save()
+
+        # Store order data in session for confirmation page (optional)
+        order_data = {
+            'cart': list(cart.values()),
+            'selected_address': {
+                'fullname': selected_address.fullname,
+                'address': selected_address.adress,
+                'city': selected_address.city,
+                'state': selected_address.state,
+                'pincode': selected_address.pincode,
+                'phone': selected_address.phone,
+                'altphone': selected_address.altphone,
+                'landmark': selected_address.landmark,
+            },
+            'total_price': total_price,
+            'total_discount': total_discount,
+            'razorpay_order_id': razorpay_order_id
+        }
+        request.session['order_data'] = order_data
+
+        # Redirect to the Razorpay payment page
+        return redirect(f'/checkout/payment/{razorpay_order_id}/')
+
+    # Rendering the checkout page with available addresses
+    return render(request, 'users/checkout.html', {
+        'cart': cart, 
+        'total_price': total_price, 
+        'total_discount': total_discount,
+        'saved_addresses': saved_addresses,
+        'address_message': None  # No error message when the page is first loaded
+    })
+def razorpay_payment(request, order_id):
+    # Fetch all Buy objects with the same razorpay_order_id
+    buys = Buy.objects.filter(razorpay_order_id=order_id)
+    
+    if not buys.exists():
+        return redirect(bk_home)  # If no orders found, redirect home or show error
+    
+    # Calculate the total price for all items in the cart
+    total_price = sum([buy.product.ofr_price * buy.quantity for buy in buys])
+    total_discount = sum([buy.product.price - buy.product.ofr_price for buy in buys])
+
+    # User details
+    user = buys.first().user
+    name = user.username
+    email = user.email
+
+    # Razorpay key ID from settings
+    razorpay_key_id = settings.RAZORPAY_KEY_ID
+
+    return render(request, 'users/razorpay_payment.html', {
+        'name': name,
+        'email': email,
+        'total_price': total_price,
+        'total_discount': total_discount,
+        'razorpay_order_id': order_id,
+        'razorpay_key_id': razorpay_key_id,
+    })
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+
+def payment_success(request):
+    if request.method == "POST":
+        razorpay_order_id = request.POST.get("razorpay_order_id")
+        razorpay_payment_id = request.POST.get("razorpay_payment_id")
+        razorpay_signature = request.POST.get("razorpay_signature")
+
+        try:
+            params_dict = {
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature
+            }
+            razorpay_client.utility.verify_payment_signature(params_dict)
+            buy = Buy.objects.get(razorpay_order_id=razorpay_order_id)
+            buy.payment_status = "Paid"
+            buy.save()
+
+            buy.payment_id = razorpay_payment_id
+            buy.save()
+
+            messages.success(request, "Payment successful! Your order is now confirmed.")
+            
+            return redirect('order_success', buy_id=buy.id)
+
+        except razorpay.errors.SignatureVerificationError:
+            messages.error(request, "Payment verification failed! Please try again.")
+            return redirect('order_failed')  
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+    
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+
+def cancel_order(request, buy_id):
+    if 'user' in request.session:
+        try:
+            buy = Buy.objects.get(id=buy_id)
+            product = buy.product
+
+            if buy.status == "Pending":
+                buy.status = "Canceled"
+                buy.save()
+
+                product.stock += buy.quantity
+                product.save()
+                if buy.payment_status == "Paid":
+                    try:
+                        refund = razorpay_client.payment.refund(buy.payment_id)
+                        messages.success(request, "Order canceled successfully and refund initiated.")
+                    except razorpay.errors.RazorpayError as e:
+                        messages.error(request, f"Error while processing the refund: {str(e)}")
+                else:
+                    messages.success(request, "Order canceled successfully.")
+
+            else:
+                messages.warning(request, "You cannot cancel an order that is already shipped or delivered.")
+
+        except Buy.DoesNotExist:
+            messages.warning(request, "Order not found.")
+            return redirect(view_odrs)  
+
+        return redirect(view_odrs)  
+
     else:
         return redirect('bk_login')
-
     
-def cancel_order(req, id):
-    if 'user' in req.session:
-        order = Buys.objects.get(pk=id)
+def delete_order(request, order_id):
+    try:
+        order = Buy.objects.get(id=order_id)
         order.delete()
+        return redirect(view_odrs)  
+    except Buy.DoesNotExist:
         return redirect(view_odrs)
-    else:
-        return redirect(bk_login)
     
 def view_booking_details(req, id):
     if 'user' in req.session:
         user = User.objects.get(username=req.session['user'])
         try:
-            booking = Buys.objects.get(user=user, pk=id)  # Fetch a specific booking by ID
-        except Buys.DoesNotExist:
-            return redirect('some_error_page')  # Handle case where the booking is not found
+            booking = Buy.objects.get(user=user, pk=id) 
+        except Buy.DoesNotExist:
+            return redirect('some_error_page') 
         
         return render(req, 'users/viewbookingdetails.html', {'booking': booking})
     else:
         return redirect('bk_login')
 
 
-def order_success(req):
-    if 'order_data' in req.session:
-        order_data = req.session['order_data']
-        
-        # Retrieve the user and address information
-        user = User.objects.get(username=req.session['user'])
-        selected_address_data = order_data['selected_address']
-        
-        # Check if the address already exists in the database
-        existing_address = Userdtl.objects.filter(
-            user=user,
-            fullname=selected_address_data['fullname'],
-            adress=selected_address_data['address'],
-            city=selected_address_data['city'],
-            state=selected_address_data['state'],
-            pincode=selected_address_data['pincode'],
-            phone=selected_address_data['phone'],
-            altphone=selected_address_data['altphone'],
-            landmark=selected_address_data['landmark']
-        ).first()
+def order_success(request, buy_id):
+    # Retrieve the successful buy order
+    buy = Buy.objects.get(id=buy_id)
 
-        if not existing_address:
-            # Save the new address if it does not exist
-            selected_address = Userdtl.objects.create(
-                user=user,
-                fullname=selected_address_data['fullname'],
-                adress=selected_address_data['address'],
-                city=selected_address_data['city'],
-                state=selected_address_data['state'],
-                pincode=selected_address_data['pincode'],
-                phone=selected_address_data['phone'],
-                altphone=selected_address_data['altphone'],
-                landmark=selected_address_data['landmark'],
-            )
-        else:
-            # If the address already exists, use the existing one
-            selected_address = existing_address
-
-        # Process cart items and reduce stock
-        for item in order_data['cart']:
-            product = Books.objects.get(id=item['product'])
-            Buys.objects.create(
-                user=user,
-                product=product,
-                address=selected_address,
-                # quantity=item['quantity'],
-                # total_price=product.ofr_price * item['quantity']
-            )
-            # Reduce stock
-            product.stock -= item['quantity']
-            product.save()
-
-        # Clear the cart
-        Cart.objects.filter(user=user).delete()
-
-        # Clear session data after completing the order
-        del req.session['order_data']
-        
-        return render(req, 'users/ordersuccess.html')
-    else:
-        return redirect('home')
+    return render(request, 'users/order_success.html', {
+        'buy': buy,
+    })
 
 # ------------------------Footer------------------------------
 

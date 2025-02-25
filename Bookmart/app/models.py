@@ -40,6 +40,43 @@ class Buys(models.Model):
     address=models.ForeignKey(Userdtl,on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
+class Buy(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Canceled', 'Canceled'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Books, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    quantity = models.PositiveIntegerField(default=1)
+    status = models.CharField(
+        max_length=50, 
+        choices=STATUS_CHOICES, 
+        default='Pending'
+    )
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    payment_status = models.CharField(max_length=20, default="Pending")
+
+    def __str__(self):
+        return f"{self.product.name} ({self.status})"
+    
+
+class Order(models.Model):
+    buy = models.OneToOneField(Buy, on_delete=models.SET_NULL, null=True, blank=True)  # # Link Order to Buy
+    customer_name = models.CharField(max_length=100)
+
+    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Allows null values
+    email = models.EmailField()
+    address = models.TextField(blank=True, null=True)  # Allows null values
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order by {self.customer_name} on {self.created_at}"
+    
+
 class Review(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     review=models.TextField()

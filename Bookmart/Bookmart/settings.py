@@ -134,3 +134,8 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'bookmarta64@gmail.com'
 EMAIL_HOST_PASSWORD = 'vdgc ucng wbve eyvv'
+
+RAZORPAY_KEY_ID = "rzp_test_VMVpa8vUvUFBKW"
+RAZORPAY_SECRET_KEY = "2GTejhuRMVlxXYGGh9Sqs1S1"
+# In settings.py
+RAZORPAY_MODE = "TEST"

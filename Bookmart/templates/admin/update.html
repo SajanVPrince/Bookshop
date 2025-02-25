@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Include Font Awesome for the icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        #navb {
+            background: linear-gradient(90deg, #80df68 0%, #02810d 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #navb .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        #navb .nav-link {
+            color: white;
+            font-size: 1.1rem;
+            margin-left: 15px;
+        }
+        #navb .nav-link:hover {
+            color: #4d3e02;
+        }
+        #navb .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            border-radius: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .dropdown-item {
+            font-size: 1rem;
+        }
+        .navbar-toggler-icon {
+            background-color: white;
+        }
+        .form-control {
+            border-radius: 20px;
+        }
+        .btn {
+            border-radius: 20px;
+        }
+        /* Light red background for canceled orders */
+        .canceled-row {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+        }
+
+        /* Blue background for pending orders */
+        .pending-row {
+            background-color: #cce5ff !important;
+            color: #004085 !important;
+        }
+
+        /* Green background for shipped orders */
+        .shipped-row {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+        }
+
+        .canceled-row td,
+        .pending-row td,
+        .shipped-row td,
+        .canceled-row th,
+        .pending-row th,
+        .shipped-row th {
+            background-color: inherit !important;
+            color: inherit !important;
+        }
+
+        /* Disable Cancel button for canceled orders */
+        .disabled-btn {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Color Styles for Different Message Types */
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .message.info {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .message button {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Back Button Style */
+        .back-button {
+            margin-bottom: 20px;
+        }
+
+        .back-button a {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-button a:hover {
+            background-color: #ffffff;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm " id="navb">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="adhome">BookMART</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item" id="dropdown">
+                <a href="upstatus" class="nav-link">Update Status
+                </a>
+              </li> 
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Books</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="../dramasbk">Drama</a></li>
+                  <li><a class="dropdown-item" href="../fantacysbk">Fantacy</a></li>
+                  <li><a class="dropdown-item" href="../lovesbk">Love</a></li>
+                  <li><a class="dropdown-item" href="../scifisbk">Sci-Fi</a></li>
+                  <li><a class="dropdown-item" href="../othersbk">Others</a></li>
+                </ul>
+              </li>  
+              <li class="nav-item" id="dropdown">
+                <a href="viewuser" class="nav-link" id="dropbtn"> Users
+                </a>
+              </li>  
+              <li class="nav-item" >
+                <a href="viewreview" class="nav-link" id="dropbtn"> Reviews</a>
+            </li>
+            </ul>
+            <!-- <form class="d-flex">
+              <input class="form-control me-2" type="text" placeholder="Search">
+              <button class="btn btn-primary"><a href="" style="color: rgb(255, 255, 255); margin-top: 8px;"><i class="fa-solid fa-search"></i></a></button> -->
+              <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="login"><i class="fa-solid fa-user" style="margin-left: 700px;"></i></a>
+                </li>
+                
+              </ul>
+            </form>
+          </div>  
+        </div>
+      </nav>
+    <div class="container mt-4">
+        <!-- Back Button with Arrow Icon -->
+        <div class="back-button">
+            <a href="javascript:history.back()">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <h1 class="text-center mb-4">Admin Orders Page</h1>
+
+        <!-- Success or Error Messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+                <button class="cancel-btn" onclick="this.parentElement.style.display='none';">Cancel</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Orders Table -->
+        <form method="POST" action="{% url 'upstatus' %}">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Order ID</th>
+                            <th>Customer Name</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Size</th>
+                            <th>Quantity</th> <!-- New Quantity Column -->
+                            <th>Image</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTable">
+                        {% for entry in combined_data %}
+                        <tr class="{% if entry.buy.status == 'Canceled' %}canceled-row{% elif entry.buy.status == 'Pending' %}pending-row{% elif entry.buy.status == 'Shipped' %}shipped-row{% endif %}">
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ entry.buy.id }}</td>
+                            <td>{{ entry.order.customer_name|default:"N/A" }}</td>
+                            <td>{{ entry.order.phone_number|default:"N/A" }}</td>
+                            <td>{{ entry.order.email|default:"N/A" }}</td>
+                            <td>{{ entry.order.address|default:"N/A" }}</td>
+
+                            <td>{{ entry.buy.product.name }}</td>
+                            <td>${{ entry.buy.price }}</td>
+                            <td>{{ entry.buy.size }}</td>
+                            <td>{{ entry.buy.quantity }}</td>
+                            <td>
+                                <img src="{{ entry.buy.product.img.url }}" alt="{{ entry.buy.product.name }}" class="img-thumbnail" style="height: 100px; width: auto;">
+                            </td>
+                            <td>{{ entry.buy.date }}</td>
+                            <td>
+                                <p>Status: {{ entry.buy.status }}</p>
+                                <select name="status_{{ entry.buy.id }}" class="form-select">
+                                    <option value="Pending" {% if entry.buy.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Shipped" {% if entry.buy.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                    <option value="Delivered" {% if entry.buy.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    <option value="Canceled" {% if entry.buy.status == 'Canceled' %}selected{% endif %}>Canceled</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="submit" name="update" value="{{ entry.buy.id }}" class="btn btn-primary">Update</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Search functionality for filtering the table
+        document.getElementById('searchInput').addEventListener('input', function (event) {
+            const query = event.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#ordersTable tr');
+            
+            rows.forEach(function(row) {
+                const customerName = row.querySelector('td:nth-child(3)');
+                const productName = row.querySelector('td:nth-child(7)');
+                
+                if (customerName && productName) {
+                    const customerText = customerName.textContent.toLowerCase();
+                    const productText = productName.textContent.toLowerCase();
+                    
+                    if (customerText.includes(query) || productText.includes(query)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

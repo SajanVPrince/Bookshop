@@ -38,6 +38,11 @@ urlpatterns = [
     path('deletereview/<id>',views.delete_review),
     path('viewbuy',views.view_buy),
     path('viewbookingdetails',views.viewbookingdetails),
+    path('upstatus',views.update, name='upstatus'),
+    path('create-order/<int:buy_id>/', views.create_order, name='create_order'),
+     path('create_razorpay_order/<int:buy_id>/', views.create_razorpay_order, name='create_razorpay_order'),  # Razorpay order creation
+    path('payment/success/', views.payment_success, name='payment_success'),
+
 
 
 
@@ -62,9 +67,11 @@ urlpatterns = [
     path('viewoders',views.view_odrs),
     path('product_buy/<id>',views.product_buy, name='product_buy'),
     path('checkout', views.buy_cart, name='buy_cart'),
-    path('cancel_oder/<id>',views.cancel_order),
+    path('cancel_oder/<buy_id>',views.cancel_order,name='cancel_order'),
     path('view_details/<id>',views.view_booking_details),
     path('ordersucces',views.order_success , name='order_success'),
+    path('delete_order/<int:order_id>/', views.delete_order, name='delete_order'),
+    path('checkout/payment/<str:order_id>/', views.razorpay_payment, name='razorpay_payment'),
 
     
 # ----------------Footer------------------

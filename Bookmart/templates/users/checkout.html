@@ -217,44 +217,35 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav me-auto">
-                    <!-- <li class="nav-item" id="dropdown">
-                        <a href="../../sell" class="nav-link active">Sell Your Book</a>
-                    </li>  -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Books</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../dramabk">Drama</a></li>
-                            <li><a class="dropdown-item" href="../fantacybk">Fantacy</a></li>
-                            <li><a class="dropdown-item" href="../lovebk">Love</a></li>
-                            <li><a class="dropdown-item" href="../scifibk">Sci-Fi</a></li>
-                            <li><a class="dropdown-item" href="../otherbk">Others</a></li>
+                            <li><a class="dropdown-item" href="dramabk">Drama</a></li>
+                            <li><a class="dropdown-item" href="fantacybk">Fantacy</a></li>
+                            <li><a class="dropdown-item" href="lovebk">Love</a></li>
+                            <li><a class="dropdown-item" href="scifibk">Sci-Fi</a></li>
+                            <li><a class="dropdown-item" href="otherbk">Others</a></li>
                         </ul>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a href="../usedbk" class="nav-link">Used Books</a>
-                    </li>   -->
                     <li class="nav-item">
-                        <a href="../viewoders" class="nav-link">My Orders</a>
+                        <a href="../vieworders" class="nav-link">My Orders</a>
                     </li>
                     <li class="nav-item">
                         <a href="../viewfav" class="nav-link">Favorites</a>
                     </li>  
                 </ul>
-                <!-- <form class="d-flex" onsubmit="return validateSearch()" action="{% url 'search' %}" method="GET">
-                    <input id="searchInput" class="form-control me-2" type="text" name="q" placeholder="Search">
-                    <button class="btn btn-primary"><i class="fa-solid fa-search"></i></button> -->
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="../login"><i class="fa-solid fa-user"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../viewcart"><i class="fa-solid fa-cart-shopping"></i></a>
-                        </li>
-                    </ul>
-                </form>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../login"><i class="fa-solid fa-user"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../viewcart"><i class="fa-solid fa-cart-shopping"></i></a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
+
     <div class="checkout-container mt-5">
         <h4 class="heading-warning">Checkout</h4>
         
@@ -275,7 +266,7 @@
     
         <!-- Address Selection Section -->
         <h5 class="mt-5 select-address-heading">Select a saved address</h5>
-        <form method="POST" class="address-selection-form">
+        <form method="POST" action="{% url 'buy_cart' %}" class="address-selection-form">
             {% csrf_token %}
             {% if saved_addresses %}
                 <div class="address-options">
@@ -297,27 +288,8 @@
                 <p class="no-address-text">No saved addresses. Please add one below.</p>
             {% endif %}
 
-            <!-- Add Address Button -->
-            <button type="button" id="add-address-btn" class="btn-add-address btn btn-success mt-3" onclick="toggleAddressForm()">Add New Address</button>
-    
-           
-    
-            <!-- New Address Form (Initially hidden) -->
-            <div id="new-address-form" class="new-address-form" style="display: none;">
-                <h5 class="mt-4 new-address-heading">Add New Address</h5>
-                <input type="text" class="input-field" name="fullname" placeholder="Full Name" required>
-                <input type="text" class="input-field" name="address" placeholder="Address" required>
-                <input type="text" class="input-field" name="pincode" placeholder="Pincode" required>
-                <input type="text" class="input-field" name="city" placeholder="City" required>
-                <input type="text" class="input-field" name="state" placeholder="State" required>
-                <input type="text" class="input-field" name="phnum" placeholder="Phone Number" required>
-                <input type="text" class="input-field" name="aphnum" placeholder="Alternate Phone Number" required>
-                <input type="text" class="input-field" name="landmark" placeholder="Landmark" required>
-    
-                <button type="submit" class="btn-complete-purchase mt-3">Complete Purchase</button>
-            </div>
-    
-             <button type="submit" class="btn-complete-purchase mt-3">Complete Purchase</button>
+            <!-- Button to submit form -->
+            <button type="submit" class="btn-complete-purchase mt-3">Complete Purchase</button>
         </form>
     </div>
     
@@ -344,7 +316,6 @@
                     <h4>Navigate</h4>
                     <ul>
                         <li><a href="home">Home</a></li>
-                        <!-- <li><a href="usedbk">Used Book</a></li> -->
                         <li><a href="viewcart">Cart</a></li>
                         <li><a href="viewfav">Favorites</a></li>
                     </ul>
@@ -362,40 +333,45 @@
         </div>
     </footer>
 
+
     <script>
-     // Function to toggle the visibility of the "Add New Address" form
-function toggleAddressForm() {
-    const addressForm = document.getElementById('new-address-form');
-
-    // Toggle the visibility of the form
-    if (addressForm.style.display === 'none' || addressForm.style.display === '') {
-        addressForm.style.display = 'block';  // Show the address form
-    } else {
-        addressForm.style.display = 'none';  // Hide the address form
-    }
-}
-
-// On page load, check if there's already a selected address
-document.addEventListener('DOMContentLoaded', function() {
-    const addressRadios = document.querySelectorAll('input[name="address_id"]');
-    const addressForm = document.getElementById('new-address-form');
-
-    let isAddressSelected = false;
-
-    // Check if any address is selected
-    addressRadios.forEach(radio => {
-        if (radio.checked) {
-            isAddressSelected = true;
+        document.querySelector('.btn-complete-purchase').addEventListener('click', function(event) {
+            event.preventDefault(); 
+            window.location.href = '{% url "order_success" %}';  // Redirect to the order success page
+        });
+        document.querySelector('.btn-complete-purchase').addEventListener('click', function(event) {
+        event.preventDefault();  
+        document.querySelector('.address-selection-form').submit(); 
+        });
+        function toggleAddressForm() {
+        const addressForm = document.getElementById('new-address-form');
+        if (addressForm.style.display === 'none' || addressForm.style.display === '') {
+            addressForm.style.display = 'block';  // Show the address form
+        } else {
+            addressForm.style.display = 'none';  // Hide the address form
         }
-    });
+        }
 
-    // If there's a selected address, hide the new address form
-    if (isAddressSelected) {
-        addressForm.style.display = 'none';  // Hide the new address form
-    } else {
-        addressForm.style.display = 'none';  // Keep the form hidden initially
-    }
-});
+        document.addEventListener('DOMContentLoaded', function() {
+            const addressRadios = document.querySelectorAll('input[name="address_id"]');
+            const addressForm = document.getElementById('new-address-form');
+
+            let isAddressSelected = false;
+
+            // Check if any address is selected
+            addressRadios.forEach(radio => {
+                if (radio.checked) {
+                    isAddressSelected = true;
+                }
+            });
+
+            // If there's a selected address, hide the new address form
+            if (isAddressSelected) {
+                addressForm.style.display = 'none';  // Hide the new address form
+            } else {
+                addressForm.style.display = 'none';  // Keep the form hidden initially
+            }
+        });
 
         </script>
 </body>
