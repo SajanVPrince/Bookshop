@@ -50,6 +50,7 @@ class Buy(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Books, on_delete=models.CASCADE)
+    address=models.ForeignKey(Userdtl,on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
     quantity = models.PositiveIntegerField(default=1)
     status = models.CharField(
@@ -65,12 +66,12 @@ class Buy(models.Model):
     
 
 class Order(models.Model):
-    buy = models.OneToOneField(Buy, on_delete=models.SET_NULL, null=True, blank=True)  # # Link Order to Buy
+    buy = models.OneToOneField(Buy, on_delete=models.SET_NULL, null=True, blank=True) 
     customer_name = models.CharField(max_length=100)
 
-    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Allows null values
+    phone_number = models.CharField(max_length=15, blank=True, null=True) 
     email = models.EmailField()
-    address = models.TextField(blank=True, null=True)  # Allows null values
+    address = models.TextField(blank=True, null=True)  
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

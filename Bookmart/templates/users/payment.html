@@ -16,12 +16,12 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #4facfe, #00f2fe);
+            background: linear-gradient(to right, #ffffff, #00f2fe);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+            color: #000000;
             text-align: center;
             overflow: hidden;
         }
@@ -51,7 +51,7 @@
         .amount {
             font-size: 24px;
             font-weight: bold;
-            color: #ffcc00;
+            color: #020202;
         }
 
         .pay-button {
@@ -66,6 +66,28 @@
             margin-top: 30px;
             animation: pulse 2s infinite;
         }
+
+        .razorpay-payment-button {
+    background-color: #4CAF50;  /* Green button background */
+    color: white;               /* White text */
+    font-size: 16px;            /* Font size */
+    padding: 15px 32px;         /* Padding */
+    border-radius: 25px;        /* Rounded corners */
+    border: none;               /* No border */
+    cursor: pointer;            /* Pointer cursor on hover */
+    transition: background-color 0.3s ease;  /* Smooth background transition */
+}
+
+/* Hover effect for button */
+.razorpay-payment-button:hover {
+    background-color: #45a049;  /* Darker green on hover */
+}
+
+/* Add a shadow for a more elegant effect */
+.razorpay-payment-button {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 
         .pay-button:hover {
             background-color: #e25b4c;
@@ -126,8 +148,8 @@
         </form>
 
         <div class="razorpay-button">
-            <button class="pay-button">Proceed to Payment</button>
-        <a href="../../../home" class="btn btn-success">Go Home</a>
+            <!-- <button class="pay-button">Proceed to Payment</button> -->
+        <a href="../../../home" class="btn btn-danger">Go Home</a>
         </div>
     </div>
 </body>

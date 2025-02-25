@@ -36,12 +36,13 @@ urlpatterns = [
     path('deleteuser/<id>',views.delete_user),
     path('viewreview',views.view_review),
     path('deletereview/<id>',views.delete_review),
-    path('viewbuy',views.view_buy),
-    path('viewbookingdetails',views.viewbookingdetails),
+    path('viewbuy',views.view_buy,name="viewbuy"),
+    path('viewbookingdetails/<buy_id>',views.viewbookingdetails),
     path('upstatus',views.update, name='upstatus'),
     path('create-order/<int:buy_id>/', views.create_order, name='create_order'),
-     path('create_razorpay_order/<int:buy_id>/', views.create_razorpay_order, name='create_razorpay_order'),  # Razorpay order creation
+    path('create_razorpay_order/<int:buy_id>/', views.create_razorpay_order, name='create_razorpay_order'),  # Razorpay order creation
     path('payment/success/', views.payment_success, name='payment_success'),
+    path('delete_booking/<int:buy_id>/', views.delete_booking, name='delete_booking'),
 
 
 

@@ -254,9 +254,13 @@
                                 <h4 class="offer-price">₹{{i.product.ofr_price}}</h4>
                             </div>
                             <p class="product-description">{{i.product.dis}}</p>
+                            <p class="product-description">{{i.status}}</p>
+
+                            {% if i.status == 'Canceled' %}
+                            <a href="delete_booking/{{i.pk}}" class="btn btn-danger" style="margin-left: 33%;margin-bottom: 10px;">Delete</a> <br>
+                        {% endif %}
                             <div class="button-group">
-                                <!-- <a href="cancel_oder/{{i.pk}}" class="btn btn-danger">Cancel</a> -->
-                                <a href="viewbookingdetails" class="btn btn-success">View Details</a>
+                                <a href="viewbookingdetails/{{i.pk}}" class="btn btn-success" style="margin-left: 25%;">View Details</a>
                             </div>
                         </div>
                     </div>

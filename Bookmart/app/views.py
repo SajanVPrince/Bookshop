@@ -399,9 +399,14 @@ def view_buy(req):
     else:
         return redirect(bk_login)
     
-def viewbookingdetails(request):
-    Buy = Buy.objects.all().select_related('product', 'user', 'address')
-    return render(request, 'admin/viewbookingdetails.html', {'Buy': Buy})
+def viewbookingdetails(request, buy_id):
+    buy = get_object_or_404(Buy, id=buy_id)
+    return render(request, 'admin/viewbookingdetails.html', {'buy': buy})
+
+def delete_booking(request, buy_id):
+    buy = Buy.objects.get(pk=buy_id)
+    buy.delete()
+    return redirect(view_buy)
 
 
 def update(req):

@@ -198,39 +198,36 @@
       </nav>
 
       <div class="container mt-4 viewbookingdetails">
-        <a href="viewbuy" class="btn btn-danger">Go Back</a>
-        <h3 class="section-title">All Purchased Books</h3>
-        {% if buys %}
+        <a href="{% url 'viewbuy' %}" class="btn btn-danger">Go Back</a>
+        <h3 class="section-title">Booking Details</h3>
+        
+        {% if buy %}
             <div class="row">
-                {% for buy in buys %}
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-12">
                     <div class="card mb-4">
-                        <img src="{{buy.product.img.url}}" alt="{{buy.product.name}}" class="card-img-top" style="height: 250px; object-fit: contain;">
+                        <img src="{{ buy.product.img.url }}" alt="{{ buy.product.name }}" class="card-img-top" style="height: 250px; object-fit: contain;">
                         <div class="card-body">
-                            <h5 class="card-title">{{buy.product.name}}</h5>
-                            <p class="card-text">Author: {{buy.product.ath_name}}</p>
-                            <p class="card-text">Price: ₹{{buy.product.ofr_price}} <s>₹{{buy.product.price}}</s></p>
-                            <p class="card-text">Genres: {{buy.product.bk_genres}}</p>
-                            <p class="card-text">Stock: {{buy.product.stock}}</p>
-                            <p class="card-text">{{buy.product.dis}}</p>
+                            <h5 class="card-title">{{ buy.product.name }}</h5>
+                            <p class="card-text">Author: {{ buy.product.ath_name }}</p>
+                            <p class="card-text">Price: ₹{{ buy.product.ofr_price }} <s>₹{{ buy.product.price }}</s></p>
+                            <p class="card-text">Genres: {{ buy.product.bk_genres }}</p>
+                            <!-- <p class="card-text">Stock: {{ buy.product.stock }}</p> -->
+                            <p class="card-text">{{ buy.product.dis }}</p>
     
                             <h6 class="mt-3">Buyer Details</h6>
-                            <p class="card-text">Name: {{buy.user.username}}</p>
-                            <p class="card-text">Full Name: {{buy.address.fullname}}</p>
-                            <p class="card-text">Phone: {{buy.address.phone}}</p>
-                            <p class="card-text">City: {{buy.address.city}}</p>
-                            <p class="card-text">Address: {{buy.address.adress}}</p>
-                            <p class="card-text">Pincode: {{buy.address.pincode}}</p>
-                            <p class="card-text">Order Date: {{buy.date}}</p>
-
-                            
+                            <p class="card-text">Name: {{ buy.user.username }}</p>
+                            <p class="card-text">Full Name: {{ buy.address.fullname }}</p>
+                            <p class="card-text">Phone: {{ buy.address.phone }}</p>
+                            <p class="card-text">City: {{ buy.address.city }}</p>
+                            <p class="card-text">Address: {{ buy.address.adress }}</p>
+                            <p class="card-text">Pincode: {{ buy.address.pincode }}</p>
+                            <p class="card-text">Order Date: {{ buy.date }}</p>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
         {% else %}
-            <h4 class="text-center" style="margin-top: 20%;">No purchases available.</h4>
+            <h4 class="text-center" style="margin-top: 20%;">No booking details available.</h4>
         {% endif %}
     </div>
     

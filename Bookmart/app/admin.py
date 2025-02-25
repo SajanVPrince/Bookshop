@@ -5,5 +5,6 @@ from app.models import *
 admin.site.register(Books)
 admin.site.register(Userdtl)
 admin.site.register(Review)
-
-
+admin.site.register(Cart)
+admin.site.register(Buy)
+admin.site.register(Order)
